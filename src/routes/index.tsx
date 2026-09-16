@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CalendarDays, Download, FileText, Landmark, ShieldCheck } from "lucide-react";
 import { AppShell, downloadReceipt } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
