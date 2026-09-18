@@ -92,7 +92,7 @@ function Index() {
           <p className="text-sm leading-6 text-muted-foreground">
             Presiona <strong className="text-foreground">Buscar por año</strong> para ver todos tus recibos registrados y descargar el que necesites en PDF.
           </p>
-          <Button variant="outline" size="lg" className="mt-4 w-full sm:w-auto" onClick={openSearch}>
+          <Button variant="default" size="lg" className="mt-4 w-full sm:w-auto" onClick={openSearch}>
             <CalendarSearch /> Buscar por año
           </Button>
         </div>
