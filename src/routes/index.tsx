@@ -35,7 +35,6 @@ const allReceipts: Receipt[] = [
 function Index() {
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const recentReceipts = allReceipts.slice(0, 3);
   const receiptsByYear = useMemo(() => {
     const groups: Record<string, Receipt[]> = {};
     for (const receipt of allReceipts) {
@@ -47,6 +46,7 @@ function Index() {
   }, []);
   const years = useMemo(() => Object.keys(receiptsByYear).sort((a, b) => Number(b) - Number(a)), [receiptsByYear]);
   const openSearch = () => setSearchOpen(true);
+
 
 
 
