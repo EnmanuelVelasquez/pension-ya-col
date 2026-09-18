@@ -34,13 +34,18 @@ const allReceipts: Receipt[] = [
 
 function Index() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
 
   const recentReceipts = allReceipts.slice(0, 3);
-  const years = useMemo(() => [...new Set(allReceipts.map((r) => r.year))], []);
-  const yearReceipts = selectedYear ? allReceipts.filter((r) => r.year === selectedYear) : [];
+  const receiptsByYear = useMemo(() => {
+    const groups: Record<string, Receipt[]> = {};
+    for (const receipt of allReceipts) {
+      if (!groups[receipt.year]) groups[receipt.year] = [];
+      groups[receipt.year].push(receipt);
+    }
+    return groups;
+  }, []);
+  const years = useMemo(() => Object.keys(receiptsByYear).sort((a, b) => Number(b) - Number(a)), [receiptsByYear]);
 
-  const openSearch = () => { setSelectedYear(null); setSearchOpen(true); };
 
   return (
     <AppShell>
