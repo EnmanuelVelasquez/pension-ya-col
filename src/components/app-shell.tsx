@@ -32,8 +32,8 @@ export function AppShell({ children, compact = false }: { children: ReactNode; c
   );
 }
 
-export function downloadReceipt(reference: string) {
-  const content = `PENSIÓN GLOBAL\nSoporte de pago\n\nReferencia: ${reference}\nPeriodo: Septiembre 2026\nFondo: Colpensiones\nAporte PILA: $350.000\nComisión del servicio: $20.000\nTotal pagado: $370.000 COP\n\nEste archivo es un comprobante de demostración.`;
+export function downloadReceipt(reference: string, period = "Septiembre 2026", value = "$350.000") {
+  const content = `PENSIÓN GLOBAL\nSoporte de pago\n\nReferencia: ${reference}\nPeriodo: ${period}\nFondo: Colpensiones\nAporte PILA: ${value}\nComisión del servicio: $20.000\n\nEste archivo es un comprobante de demostración.`;
   const url = URL.createObjectURL(new Blob([content], { type: "application/pdf" }));
   const anchor = document.createElement("a");
   anchor.href = url;
