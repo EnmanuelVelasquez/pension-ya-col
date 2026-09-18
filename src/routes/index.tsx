@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowRight, CalendarDays, CalendarSearch, Download, FileText, Landmark, ShieldCheck } from "lucide-react";
+import { ArrowRight, CalendarDays, CalendarSearch, Download, Landmark, ShieldCheck } from "lucide-react";
 import { AppShell, downloadReceipt } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
