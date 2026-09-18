@@ -115,7 +115,7 @@ function Index() {
               <div key={year}>
                 <p className="mb-2 text-xs font-bold uppercase text-muted-foreground">{year}</p>
                 <div className="divide-y divide-border rounded-lg border border-border">
-                  {receiptsByYear[year].map((receipt) => (
+                  {receiptsByYear[year]!.map((receipt) => (
                     <div key={receipt.reference} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-3.5">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-bold">{receipt.month} {receipt.year}</p>
