@@ -39,12 +39,15 @@ function Index() {
   const receiptsByYear = useMemo(() => {
     const groups: Record<string, Receipt[]> = {};
     for (const receipt of allReceipts) {
-      if (!groups[receipt.year]) groups[receipt.year] = [];
-      groups[receipt.year].push(receipt);
+      const year = receipt.year;
+      if (!groups[year]) groups[year] = [];
+      groups[year].push(receipt);
     }
     return groups;
   }, []);
   const years = useMemo(() => Object.keys(receiptsByYear).sort((a, b) => Number(b) - Number(a)), [receiptsByYear]);
+  const openSearch = () => setSearchOpen(true);
+
 
 
   return (
