@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CalendarDays, Download, FileText, Landmark, ShieldCheck } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowRight, CalendarDays, CalendarSearch, Download, FileText, Landmark, ShieldCheck } from "lucide-react";
 import { AppShell, downloadReceipt } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -15,13 +17,31 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const receipts = [
+type Receipt = { month: string; year: string; value: string; reference: string };
+
+const allReceipts: Receipt[] = [
   { month: "Agosto", year: "2026", value: "$350.000", reference: "PG-2026-08-1842" },
   { month: "Julio", year: "2026", value: "$350.000", reference: "PG-2026-07-1139" },
   { month: "Junio", year: "2026", value: "$330.000", reference: "PG-2026-06-0874" },
+  { month: "Mayo", year: "2026", value: "$330.000", reference: "PG-2026-05-0511" },
+  { month: "Diciembre", year: "2025", value: "$330.000", reference: "PG-2025-12-3320" },
+  { month: "Noviembre", year: "2025", value: "$330.000", reference: "PG-2025-11-3178" },
+  { month: "Octubre", year: "2025", value: "$320.000", reference: "PG-2025-10-2954" },
+  { month: "Septiembre", year: "2025", value: "$320.000", reference: "PG-2025-09-2731" },
+  { month: "Diciembre", year: "2024", value: "$310.000", reference: "PG-2024-12-1205" },
+  { month: "Noviembre", year: "2024", value: "$310.000", reference: "PG-2024-11-1087" },
 ];
 
 function Index() {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+
+  const recentReceipts = allReceipts.slice(0, 3);
+  const years = useMemo(() => [...new Set(allReceipts.map((r) => r.year))], []);
+  const yearReceipts = selectedYear ? allReceipts.filter((r) => r.year === selectedYear) : [];
+
+  const openSearch = () => { setSelectedYear(null); setSearchOpen(true); };
+
   return (
     <AppShell>
       <section className="mb-7">
@@ -58,18 +78,57 @@ function Index() {
       <section className="mt-10">
         <div className="mb-4 flex items-end justify-between gap-3">
           <div><p className="text-xs font-bold uppercase text-muted-foreground">Tus documentos</p><h2 className="mt-1 text-xl font-extrabold">Historial de recibos</h2></div>
-          <span className="text-xs font-semibold text-muted-foreground">3 recibos</span>
+          <span className="text-xs font-semibold text-muted-foreground">{allReceipts.length} recibos</span>
         </div>
         <div className="divide-y divide-border rounded-lg border border-border bg-card">
-          {receipts.map((receipt) => (
+          {recentReceipts.map((receipt) => (
             <div key={receipt.reference} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-4 sm:gap-5 sm:px-5">
               <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-secondary text-primary"><FileText className="size-5" /></span>
               <div className="min-w-0"><p className="truncate text-sm font-bold">{receipt.month} {receipt.year}</p><p className="mt-0.5 text-xs text-muted-foreground">Pagado · {receipt.value}</p></div>
-              <Button variant="quiet" size="square" aria-label={`Descargar recibo de ${receipt.month}`} onClick={() => downloadReceipt(receipt.reference)}><Download /></Button>
+              <Button variant="quiet" size="square" aria-label={`Descargar recibo de ${receipt.month} ${receipt.year}`} onClick={() => downloadReceipt(receipt.reference, `${receipt.month} ${receipt.year}`, receipt.value)}><Download /></Button>
             </div>
           ))}
         </div>
+        <Button variant="outline" size="lg" className="mt-4 w-full sm:w-auto" onClick={openSearch}>
+          <CalendarSearch /> Buscar por año
+        </Button>
       </section>
+
+      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{selectedYear ? `Recibos de ${selectedYear}` : "Buscar recibos por año"}</DialogTitle>
+          </DialogHeader>
+          {!selectedYear ? (
+            <div className="grid gap-2">
+              <p className="text-sm text-muted-foreground">Selecciona el año que quieres consultar.</p>
+              {years.map((year) => (
+                <Button key={year} variant="outline" size="lg" className="justify-between" onClick={() => setSelectedYear(year)}>
+                  {year}
+                  <span className="text-xs font-semibold text-muted-foreground">{allReceipts.filter((r) => r.year === year).length} meses</span>
+                </Button>
+              ))}
+            </div>
+          ) : (
+            <div className="grid gap-3">
+              <div className="divide-y divide-border rounded-lg border border-border">
+                {yearReceipts.map((receipt) => (
+                  <div key={receipt.reference} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-3.5">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-bold">{receipt.month} {receipt.year}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">Pagado · {receipt.value}</p>
+                    </div>
+                    <Button variant="quiet" size="square" aria-label={`Descargar recibo de ${receipt.month} ${receipt.year}`} onClick={() => downloadReceipt(receipt.reference, `${receipt.month} ${receipt.year}`, receipt.value)}><Download /></Button>
+                  </div>
+                ))}
+              </div>
+              <Button variant="ghost" size="sm" className="justify-self-start" onClick={() => setSelectedYear(null)}>
+                Cambiar de año
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }
