@@ -100,43 +100,37 @@ function Index() {
         <Button variant="outline" size="lg" className="mt-4 w-full sm:w-auto" onClick={openSearch}>
           <CalendarSearch /> Buscar por año
         </Button>
+        <p className="mt-3 text-xs leading-5 text-muted-foreground">
+          Presiona <strong className="text-foreground">Buscar por año</strong> para ver todos tus recibos registrados y descargar el que necesites en PDF.
+        </p>
       </section>
 
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{selectedYear ? `Recibos de ${selectedYear}` : "Buscar recibos por año"}</DialogTitle>
+            <DialogTitle>Descargar recibos</DialogTitle>
           </DialogHeader>
-          {!selectedYear ? (
-            <div className="grid gap-2">
-              <p className="text-sm text-muted-foreground">Selecciona el año que quieres consultar.</p>
-              {years.map((year) => (
-                <Button key={year} variant="outline" size="lg" className="justify-between" onClick={() => setSelectedYear(year)}>
-                  {year}
-                  <span className="text-xs font-semibold text-muted-foreground">{allReceipts.filter((r) => r.year === year).length} meses</span>
-                </Button>
-              ))}
-            </div>
-          ) : (
-            <div className="grid gap-3">
-              <div className="divide-y divide-border rounded-lg border border-border">
-                {yearReceipts.map((receipt) => (
-                  <div key={receipt.reference} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-3.5">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-bold">{receipt.month} {receipt.year}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">Pagado · {receipt.value}</p>
+          <div className="grid max-h-[60vh] gap-5 overflow-y-auto pr-1">
+            {years.map((year) => (
+              <div key={year}>
+                <p className="mb-2 text-xs font-bold uppercase text-muted-foreground">{year}</p>
+                <div className="divide-y divide-border rounded-lg border border-border">
+                  {receiptsByYear[year].map((receipt) => (
+                    <div key={receipt.reference} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-3.5">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold">{receipt.month} {receipt.year}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">Pagado · {receipt.value}</p>
+                      </div>
+                      <Button variant="quiet" size="square" aria-label={`Descargar recibo de ${receipt.month} ${receipt.year}`} onClick={() => downloadReceipt(receipt.reference, `${receipt.month} ${receipt.year}`, receipt.value)}><Download /></Button>
                     </div>
-                    <Button variant="quiet" size="square" aria-label={`Descargar recibo de ${receipt.month} ${receipt.year}`} onClick={() => downloadReceipt(receipt.reference, `${receipt.month} ${receipt.year}`, receipt.value)}><Download /></Button>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-              <Button variant="ghost" size="sm" className="justify-self-start" onClick={() => setSelectedYear(null)}>
-                Cambiar de año
-              </Button>
-            </div>
-          )}
+            ))}
+          </div>
         </DialogContent>
       </Dialog>
+
     </AppShell>
   );
 }
