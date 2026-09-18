@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowRight, CalendarDays, CalendarSearch, Download, FileText, Landmark, ShieldCheck } from "lucide-react";
+import { ArrowRight, CalendarDays, CalendarSearch, Download, Landmark, ShieldCheck } from "lucide-react";
 import { AppShell, downloadReceipt } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -35,7 +35,6 @@ const allReceipts: Receipt[] = [
 function Index() {
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const recentReceipts = allReceipts.slice(0, 3);
   const receiptsByYear = useMemo(() => {
     const groups: Record<string, Receipt[]> = {};
     for (const receipt of allReceipts) {
@@ -47,6 +46,7 @@ function Index() {
   }, []);
   const years = useMemo(() => Object.keys(receiptsByYear).sort((a, b) => Number(b) - Number(a)), [receiptsByYear]);
   const openSearch = () => setSearchOpen(true);
+
 
 
 
@@ -88,22 +88,16 @@ function Index() {
           <div><p className="text-xs font-bold uppercase text-muted-foreground">Tus documentos</p><h2 className="mt-1 text-xl font-extrabold">Historial de recibos</h2></div>
           <span className="text-xs font-semibold text-muted-foreground">{allReceipts.length} recibos</span>
         </div>
-        <div className="divide-y divide-border rounded-lg border border-border bg-card">
-          {recentReceipts.map((receipt) => (
-            <div key={receipt.reference} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-4 sm:gap-5 sm:px-5">
-              <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-secondary text-primary"><FileText className="size-5" /></span>
-              <div className="min-w-0"><p className="truncate text-sm font-bold">{receipt.month} {receipt.year}</p><p className="mt-0.5 text-xs text-muted-foreground">Pagado · {receipt.value}</p></div>
-              <Button variant="quiet" size="square" aria-label={`Descargar recibo de ${receipt.month} ${receipt.year}`} onClick={() => downloadReceipt(receipt.reference, `${receipt.month} ${receipt.year}`, receipt.value)}><Download /></Button>
-            </div>
-          ))}
+        <div className="rounded-lg border border-border bg-card p-5">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Presiona <strong className="text-foreground">Buscar por año</strong> para ver todos tus recibos registrados y descargar el que necesites en PDF.
+          </p>
+          <Button variant="outline" size="lg" className="mt-4 w-full sm:w-auto" onClick={openSearch}>
+            <CalendarSearch /> Buscar por año
+          </Button>
         </div>
-        <Button variant="outline" size="lg" className="mt-4 w-full sm:w-auto" onClick={openSearch}>
-          <CalendarSearch /> Buscar por año
-        </Button>
-        <p className="mt-3 text-xs leading-5 text-muted-foreground">
-          Presiona <strong className="text-foreground">Buscar por año</strong> para ver todos tus recibos registrados y descargar el que necesites en PDF.
-        </p>
       </section>
+
 
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
         <DialogContent className="sm:max-w-md">
