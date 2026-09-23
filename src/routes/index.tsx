@@ -7,9 +7,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "Inicio | Pensión Global" },
+    { title: "Pensión Global Colombia" },
     { name: "description", content: "Consulta tu planilla y revisa tus recibos de pensión en Colombia." },
-    { property: "og:title", content: "Inicio | Pensión Global" },
+    { property: "og:title", content: "Pensión Global Colombia" },
     { property: "og:description", content: "Consulta tu planilla y revisa tus recibos de pensión en Colombia." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
