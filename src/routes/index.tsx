@@ -54,7 +54,7 @@ function Index() {
     <AppShell>
       <section className="mb-7">
         <p className="mb-1 text-sm font-semibold text-muted-foreground">Miércoles, 16 de septiembre</p>
-        <h1 className="text-2xl font-extrabold text-foreground sm:text-3xl">Hola, Enmanuel</h1>
+        <h1 className="text-2xl font-extrabold text-black sm:text-3xl">Pensión Global Colombia</h1>
         <p className="mt-1 text-sm text-muted-foreground">Tu aporte pensional está listo para pagar.</p>
       </section>
 
